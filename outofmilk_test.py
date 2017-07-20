@@ -32,12 +32,7 @@ class OutOfMilkAndroidTests(unittest.TestCase):
     def tearDown(self):        
         self.driver.quit()
 
-    def test_add_delete_shopping_list_item(self):
-        sleep(2)        
-
-        # click the Skip button on Login page
-        self.driver.find_element_by_xpath("//android.widget.Button[contains(@resource-id,'action_skip')]").click()                
-        
+    def add_shopping_list_item(self):                
         sleep(2)
         try:
             self.driver.find_element_by_xpath("//android.widget.EditText[contains(@resource-id,'input_field')]")            
@@ -54,9 +49,8 @@ class OutOfMilkAndroidTests(unittest.TestCase):
 
         # press "Done" button on keyboard
         self.driver.keyevent(66)
-            
-        sleep(5)
 
+    def delete_shopping_list_item(self):
         # check the check box
         self.driver.find_element_by_xpath("//android.widget.CheckBox[contains(@resource-id, 'check_box')]").click()
 
@@ -65,7 +59,38 @@ class OutOfMilkAndroidTests(unittest.TestCase):
 
         # confirm Delete All
         self.driver.find_element_by_xpath("//android.widget.Button[contains(@resource-id, 'button1')]").click()
+
+    def test_add_shopping_list_item(self):
+        sleep(2)        
+
+        # click the Skip button on Login page
+        self.driver.find_element_by_xpath("//android.widget.Button[contains(@resource-id,'action_skip')]").click()                
+
+        self.add_shopping_list_item()
+            
+        # test whether item is added successfully
+        sleep(2)
+        sugar_el = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Sugar']")
+        self.assertIsNotNone(sugar_el)
+
         sleep(5)
+
+    def test_delete_shopping_list_item(self):
+        sleep(2)
+
+        # click the Skip button on Login page
+        self.driver.find_element_by_xpath("//android.widget.Button[contains(@resource-id,'action_skip')]").click()                
+
+        self.add_shopping_list_item()
+        
+        sleep(5)
+
+        self.delete_shopping_list_item()
+
+        # test whether item is deleted successfully
+        sugar_el = self.driver.find_elements_by_xpath("//android.widget.TextView[@text='Sugar']")
+        self.assertEqual(len(sugar_el), 0)
+
         
 
 if __name__ == '__main__':
